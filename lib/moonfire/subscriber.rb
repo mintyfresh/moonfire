@@ -4,12 +4,29 @@ module Moonfire
   class Subscriber
     DEFAULT_SUBSCRIPTION_BLOCK = -> (_) { true }
 
+    # @return [#deliver]
+    def self.delivery_method
+      @delivery_method ||= Moonfire::DeliveryMethod::Inline.new
+    end
+
+    # @param delivery_method [#deliver]
+    # @return [void]
+    def self.delivery_method=(delivery_method)
+      @delivery_method = delivery_method
+    end
+
     # @param message [Class<Moonfire::Message>]
     # @yieldparam message [Moonfire::Message]
     # @yieldreturn [Boolean]
     # @return [void]
-    def self.subscribes_to(message_class, &block)
-      subscriptions[message_class] = block || DEFAULT_SUBSCRIPTION_BLOCK
+    def self.subscribes_to(*message_classes, &block)
+      message_classes.each do |message_class|
+        unless message_class < Moonfire::Message
+          raise ArgumentError, 'Message class must be a subclass of Moonfire::Message'
+        end
+
+        subscriptions[message_class] = block || DEFAULT_SUBSCRIPTION_BLOCK
+      end
     end
 
     # @return [Hash{Class<Moonfire::Message> => Proc}]
@@ -36,7 +53,15 @@ module Moonfire
     # @param message [Moonfire::Message]
     # @return [void]
     def self.deliver(message)
-      new(message).perform if accepts?(message)
+      delivery_method.deliver(self, message) if accepts?(message)
+    end
+
+    # @param message_bus [Moonfire::MessageBus]
+    # @return [void]
+    def self.install_into_message_bus(message_bus)
+      subscriptions.each_key do |message_class|
+        message_bus.add_subscriber(message_class, self)
+      end
     end
 
     # @return [Moonfire::Message]

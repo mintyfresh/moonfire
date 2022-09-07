@@ -8,48 +8,48 @@ module Moonfire
       include Moonfire::Publisher
 
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        # class Created < Moonfire::Message
+        # class Create < Moonfire::Message
         #   attribute :user, required: true
         # end
-        class Created < Moonfire::Message
+        class Create < Moonfire::Message
           attribute :#{model_name.singular}, required: true
         end
 
-        # class Updated < Moonfire::Message
+        # class Update < Moonfire::Message
         #   attribute :user, required: true
         # end
-        class Updated < Moonfire::Message
+        class Update < Moonfire::Message
           attribute :#{model_name.singular}, required: true
         end
 
-        # class Destroyed < Moonfire::Message
+        # class Destroy < Moonfire::Message
         #   attribute :user, required: true
         # end
-        class Destroyed < Moonfire::Message
+        class Destroy < Moonfire::Message
           attribute :#{model_name.singular}, required: true
         end
       RUBY
 
-      after_create_commit :publish_record_created
-      after_update_commit :publish_record_updated
-      after_destroy_commit :publish_record_destroyed
+      after_create_commit :publish_record_create
+      after_update_commit :publish_record_update
+      after_destroy_commit :publish_record_destroy
     end
 
   private
 
     # @return [void]
-    def publish_record_created
-      publish self.class::Created.new(model_name.singular.to_sym => self)
+    def publish_record_create
+      publish self.class::Create.new(model_name.singular.to_sym => self)
     end
 
     # @return [void]
-    def publish_record_updated
-      publish self.class::Updated.new(model_name.singular.to_sym => self)
+    def publish_record_update
+      publish self.class::Update.new(model_name.singular.to_sym => self)
     end
 
     # @return [void]
-    def publish_record_destroyed
-      publish self.class::Destroyed.new(model_name.singular.to_sym => self)
+    def publish_record_destroy
+      publish self.class::Destroy.new(model_name.singular.to_sym => self)
     end
   end
 end

@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 
-require 'singleton'
-
 module Moonfire
   class MessageBus
-    # @!method instance
-    #   @!scope class
-    #   @return [Moonfire::MessageBus]
-    include Singleton
-
     def initialize
       @subscriptions = {}
     end

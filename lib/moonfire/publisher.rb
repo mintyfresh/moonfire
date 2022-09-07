@@ -11,7 +11,14 @@ module Moonfire
     def publish(message, validate: true, &block)
       message.validate! if validate
 
-      MessageBus.instance.deliver(message, &block)
+      message_bus.deliver(message, &block)
+    end
+
+  protected
+
+    # @return [Moonfire::MessageBus]
+    def message_bus
+      Moonfire.default_message_bus
     end
   end
 end
