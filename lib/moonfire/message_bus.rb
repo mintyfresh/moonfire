@@ -41,7 +41,7 @@ module Moonfire
 
       while message_class < Moonfire::Message
         subscribers_for(message_class).each do |subscriber_class|
-          subscriber_class.deliver(message)
+          deliver_message_to_subscriber(subscriber_class, message)
         rescue StandardError => error
           # Defer any error handling to the message publisher
           yield(subscriber_class, message, error) if block_given?
@@ -50,6 +50,15 @@ module Moonfire
         # Check for subscriptions to the parent class
         message_class = message_class.superclass
       end
+    end
+
+  private
+
+    # @param subscriber_class [Class<Moonfire::Subscriber>]
+    # @param message [Moonfire::Message]
+    # @return [void]
+    def deliver_message_to_subscriber(subscriber_class, message)
+      subscriber_class.deliver(message)
     end
   end
 end

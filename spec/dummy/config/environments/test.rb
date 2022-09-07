@@ -49,4 +49,7 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
+
+  require 'moonfire/rspec'
+  Moonfire.default_message_bus = Moonfire::RSpec::TestMessageBus.new
 end
