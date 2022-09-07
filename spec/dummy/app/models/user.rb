@@ -11,11 +11,7 @@
 #  updated_at :datetime         not null
 #
 class User < ApplicationRecord
-  include Moonfire::Publisher
+  include Moonfire::Model
 
   validates :name, :email, presence: true
-
-  after_create_commit do
-    publish Created.new(user: self)
-  end
 end
