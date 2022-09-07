@@ -5,5 +5,7 @@ require 'moonfire/engine'
 
 module Moonfire
   autoload :Message, 'moonfire/message'
+  autoload :MessageBus, 'moonfire/message_bus'
+  autoload :Publisher, 'moonfire/publisher'
   autoload :Subscriber, 'moonfire/subscriber'
 end
