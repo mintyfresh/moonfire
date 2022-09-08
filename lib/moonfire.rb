@@ -11,8 +11,15 @@ module Moonfire
   autoload :Publisher, 'moonfire/publisher'
   autoload :Subscriber, 'moonfire/subscriber'
 
-  mattr_accessor :default_message_bus, default: MessageBus.new
-  mattr_accessor :subscriber_paths, default: []
+  # @return [Moonfire::MessageBus]
+  def self.message_bus
+    Engine.config.moonfire.message_bus
+  end
+
+  # @return [Array<String, Pathname>]
+  def self.subscriber_paths
+    Engine.config.moonfire.subscriber_paths
+  end
 
   # Loads all subscribers from the configured subscriber paths and installs them
   # into the given message bus.

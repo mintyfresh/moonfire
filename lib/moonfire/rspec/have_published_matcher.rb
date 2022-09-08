@@ -80,7 +80,7 @@ RSpec::Matchers.define :have_published do |expected_class|
 private
 
   def message_bus
-    Moonfire.default_message_bus
+    Moonfire.message_bus
   end
 
   def block_source(block)

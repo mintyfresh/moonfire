@@ -18,7 +18,7 @@ module Moonfire
 
     # @return [Moonfire::MessageBus]
     def message_bus
-      Moonfire.default_message_bus
+      Moonfire.message_bus
     end
   end
 end
