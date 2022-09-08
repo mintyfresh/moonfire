@@ -9,10 +9,12 @@ module Moonfire
       @delivery_method ||= Moonfire::DeliveryMethod::Inline.new
     end
 
-    # @param delivery_method [#deliver]
+    # @param delivery_method [Symbol, Class, nil]
     # @return [void]
     def self.delivery_method=(delivery_method)
-      @delivery_method = delivery_method
+      locator, options = delivery_method
+
+      @delivery_method = Moonfire::DeliveryMethod.resolve(locator, **options)
     end
 
     # @param message [Class<Moonfire::Message>]
