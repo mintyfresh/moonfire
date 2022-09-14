@@ -42,6 +42,23 @@ RSpec.describe LogOddUserEventsSubscriber, type: :subscriber do
       allow(Rails.logger).to receive(:info)
     end
 
+    it 'is called when a user is created' do
+      user = create(:user)
+      expect(User::Create).to have_been_delivered_to(described_class).with(user:)
+    end
+
+    it 'is called when a user is updated' do
+      user = create(:user)
+      user.update!(name: 'New Name')
+      expect(User::Update).to have_been_delivered_to(described_class).with(user:)
+    end
+
+    it 'is called when a user is destroyed' do
+      user = create(:user)
+      user.destroy!
+      expect(User::Destroy).to have_been_delivered_to(described_class).with(user:)
+    end
+
     context 'with a user create message' do
       let(:message) { User::Create.new(user: build(:user, id: 1)) }
 

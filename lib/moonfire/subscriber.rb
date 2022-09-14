@@ -13,7 +13,6 @@ module Moonfire
     # @return [void]
     def self.delivery_method=(delivery_method)
       locator, options = delivery_method
-
       @delivery_method = Moonfire::DeliveryMethod.resolve(locator, **options)
     end
 

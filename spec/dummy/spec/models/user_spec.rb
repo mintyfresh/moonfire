@@ -42,4 +42,22 @@ RSpec.describe User, type: :model do
     user.save!
     expect { user.destroy! }.to have_published(User::Destroy).with(user:)
   end
+
+  describe User::Create do
+    it 'has subscribers' do
+      expect(described_class).to have_subscribers
+    end
+  end
+
+  describe User::Update do
+    it 'has subscribers' do
+      expect(described_class).to have_subscribers
+    end
+  end
+
+  describe User::Destroy do
+    it 'has subscribers' do
+      expect(described_class).to have_subscribers
+    end
+  end
 end

@@ -80,7 +80,14 @@ RSpec::Matchers.define :have_published do |expected_class|
 private
 
   def message_bus
-    Moonfire.message_bus
+    @message_bus ||= Moonfire.message_bus.tap do |message_bus|
+      raise TypeError, <<~ERROR.strip unless message_bus.is_a?(Moonfire::RSpec::TestMessageBus)
+        Moonfire.message_bus must be an instance of Moonfire::RSpec::TestMessageBus to the `have_published` matcher.
+        You should add the following line to your environment/test.rb file:
+        \trequire 'moonfire/rspec'
+        \tconfig.moonfire.message_bus = Moonfire::RSpec::TestMessageBus.new
+      ERROR
+    end
   end
 
   def block_source(block)

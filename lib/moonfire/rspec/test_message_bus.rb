@@ -21,6 +21,12 @@ module Moonfire
         super
       end
 
+      # @return [void]
+      def reset!
+        @deliveries.clear
+        @messages.clear
+      end
+
     protected
 
       # @param subscriber_class [Class<Moonfire::Subscriber>]
