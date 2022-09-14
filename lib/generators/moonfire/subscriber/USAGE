@@ -1,0 +1,8 @@
+Description:
+    Explain the generator
+
+Example:
+    bin/rails generate moonfire:subscriber Thing
+
+    This will create:
+        app/subscribers/thing_subscriber.rb
