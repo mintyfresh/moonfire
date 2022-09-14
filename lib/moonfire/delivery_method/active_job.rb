@@ -2,9 +2,10 @@
 
 module Moonfire
   module DeliveryMethod
-    class ActiveJob
+    class ActiveJob < Base
       # @param job_options [Hash]
       def initialize(**job_options)
+        super()
         @job_options = job_options
       end
 

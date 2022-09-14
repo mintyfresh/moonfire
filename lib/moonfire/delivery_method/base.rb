@@ -2,12 +2,13 @@
 
 module Moonfire
   module DeliveryMethod
-    class Inline < Base
+    class Base
+      # @abstract
       # @param subscriber_class [Class<Moonfire::Subscriber>]
       # @param message [Moonfire::Message]
       # @return [void]
       def deliver(subscriber_class, message)
-        subscriber_class.new(message).perform
+        raise NotImplementedError, "#{self.class}#deliver is not implemented"
       end
     end
   end

@@ -4,6 +4,17 @@ module Moonfire
   class Subscriber
     DEFAULT_SUBSCRIPTION_BLOCK = -> (_) { true }
 
+    # @private
+    def self.inherited(subclass)
+      super
+
+      # Inherit configuration from the parent subscriber
+      subclass.delivery_method = delivery_method
+      subscriptions.each do |message_class, condition|
+        subclass.subscribes_to(message_class, &condition)
+      end
+    end
+
     # @return [#deliver]
     def self.delivery_method
       @delivery_method ||= Moonfire::DeliveryMethod::Inline.new
@@ -13,7 +24,7 @@ module Moonfire
     # @return [void]
     def self.delivery_method=(delivery_method)
       locator, options = delivery_method
-      @delivery_method = Moonfire::DeliveryMethod.resolve(locator, **options)
+      @delivery_method = Moonfire::DeliveryMethod.resolve(locator, **(options || {}))
     end
 
     # @param message [Class<Moonfire::Message>]
