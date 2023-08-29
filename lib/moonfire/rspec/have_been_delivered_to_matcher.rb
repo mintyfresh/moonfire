@@ -6,13 +6,15 @@ RSpec::Matchers.define :have_been_delivered_to do |subscriber_class|
 
     @deliveries = @deliveries
       .select { |message| message.is_a?(message_class) }
-      .select { |message| @expected_attributes.nil? || values_match?(@expected_attributes, message.attributes) }
+      .select do |message|
+        @expected_attributes.nil? || values_match?(@expected_attributes, message.attributes.with_indifferent_access)
+      end
 
     @deliveries.any?
   end
 
   chain :with do |attributes|
-    @expected_attributes = attributes.stringify_keys
+    @expected_attributes = attributes
   end
 
   failure_message do |message_class|

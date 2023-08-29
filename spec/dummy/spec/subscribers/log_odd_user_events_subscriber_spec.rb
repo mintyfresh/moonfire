@@ -50,13 +50,13 @@ RSpec.describe LogOddUserEventsSubscriber, type: :subscriber do
     it 'is called when a user is updated' do
       user = create(:user)
       user.update!(name: 'New Name')
-      expect(User::Update).to have_been_delivered_to(described_class).with(user:)
+      expect(User::Update).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
     end
 
     it 'is called when a user is destroyed' do
       user = create(:user)
       user.destroy!
-      expect(User::Destroy).to have_been_delivered_to(described_class).with(user:)
+      expect(User::Destroy).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
     end
 
     context 'with a user create message' do

@@ -6,8 +6,11 @@ RSpec::Matchers.define :have_published do |expected_class|
     block.call
 
     @published_count = message_bus.messages[initial_count..].count do |message|
-      result   = message.instance_of?(expected_class)
-      result &&= values_match?(@expected_attributes, message.attributes) if defined?(@expected_attributes)
+      result = message.instance_of?(expected_class)
+
+      if defined?(@expected_attributes)
+        result &&= values_match?(@expected_attributes, message.attributes.with_indifferent_access)
+      end
 
       result
     end
@@ -16,7 +19,7 @@ RSpec::Matchers.define :have_published do |expected_class|
   end
 
   chain :with do |attributes|
-    @expected_attributes = attributes.stringify_keys
+    @expected_attributes = attributes
   end
 
   chain :exactly do |count|

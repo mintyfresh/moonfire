@@ -9,11 +9,14 @@ AllCops:
   ExtraDetails: true
   NewCops: enable
   SuggestExtensions: false
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.2
   Exclude:
     - 'bin/*'
-    - 'db/schema.rb'
+    - 'spec/dummy/db/schema.rb'
     - 'vendor/**/*'
+
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
@@ -75,6 +78,9 @@ RSpec/HookArgument:
 
 RSpec/NestedGroups:
   Max: 5
+
+RSpec/Rails/NegationBeValid:
+  EnforcedStyle: be_invalid
 
 Style/AccessorGrouping:
   EnforcedStyle: separated

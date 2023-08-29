@@ -11,6 +11,10 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 
 require 'rspec/rails'
 require 'moonfire/rspec'
+
+# Use a mock message bus in during testing
+Moonfire.message_bus = Moonfire::RSpec::TestMessageBus.new
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = 'Publish and subscribe to events in your Rails application'
   spec.license     = 'MIT'
 
-  spec.required_ruby_version = '>= 3.1.0'
+  spec.required_ruby_version = '>= 3.2'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -28,14 +28,14 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rails', '>= 7'
 
-  spec.add_development_dependency 'annotate'
-  spec.add_development_dependency 'byebug'
-  spec.add_development_dependency 'factory_bot_rails'
-  spec.add_development_dependency 'faker'
-  spec.add_development_dependency 'rspec-rails'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'rubocop-performance'
-  spec.add_development_dependency 'rubocop-rails'
-  spec.add_development_dependency 'rubocop-rspec'
-  spec.add_development_dependency 'sqlite3'
+  spec.add_development_dependency 'annotate', '~> 3.2'
+  spec.add_development_dependency 'byebug', '~> 11'
+  spec.add_development_dependency 'factory_bot_rails', '~> 6.2'
+  spec.add_development_dependency 'faker', '~> 3.2'
+  spec.add_development_dependency 'rspec-rails', '~> 6.0'
+  spec.add_development_dependency 'rubocop', '~> 1.56'
+  spec.add_development_dependency 'rubocop-performance', '~> 1.19'
+  spec.add_development_dependency 'rubocop-rails', '~> 2.20'
+  spec.add_development_dependency 'rubocop-rspec', '~> 2.23'
+  spec.add_development_dependency 'sqlite3', '~> 1.6'
 end

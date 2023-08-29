@@ -16,6 +16,13 @@ module Moonfire
     Engine.config.moonfire.message_bus
   end
 
+  # @param message_bus [Moonfire::MessageBus]
+  # @return [void]
+  def self.message_bus=(message_bus)
+    Engine.config.moonfire.message_bus = message_bus
+    install_subscribers_into_message_bus(message_bus)
+  end
+
   # @return [Array<String, Pathname>]
   def self.subscriber_paths
     Engine.config.moonfire.subscriber_paths

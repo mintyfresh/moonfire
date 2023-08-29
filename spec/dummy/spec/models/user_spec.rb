@@ -12,7 +12,7 @@
 #
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   subject(:user) { build(:user) }
 
   it 'has a valid factory' do
@@ -35,12 +35,14 @@ RSpec.describe User, type: :model do
 
   it 'publishes an update message when updated' do
     user.save!
-    expect { user.update!(name: 'New Name') }.to have_published(User::Update).with(user:)
+    expect { user.update!(name: 'New Name') }.to have_published(User::Update)
+      .with(hash_including(:changes, user:))
   end
 
   it 'publishes a destroy message when destroyed' do
     user.save!
-    expect { user.destroy! }.to have_published(User::Destroy).with(user:)
+    expect { user.destroy! }.to have_published(User::Destroy)
+      .with(hash_including(:changes, user:))
   end
 
   describe User::Create do
