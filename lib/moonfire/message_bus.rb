@@ -9,7 +9,7 @@ module Moonfire
     attr_accessor :logger
 
     def initialize
-      @error_mode         = ErrorMode::WARN
+      @error_mode         = ErrorMode::LOG
       @error_interceptors = []
       @logger             = Rails.logger
       @subscriptions      = {}
@@ -110,10 +110,17 @@ module Moonfire
 
       # Take an action based on the configured error mode
       case error_mode
-      when ErrorMode::WARN        then @logger.warn { "Moonfire::MessageBus: #{error.class}: #{error.message}" }
+      when ErrorMode::LOG         then log_error_and_backtrace(error)
       when ErrorMode::RAISE_FIRST then raise error
       when ErrorMode::RAISE_LAST  then error # return the error, defer raising until the end
       end
+    end
+
+    # @param error [StandardError]
+    # @return [void]
+    def log_error_and_backtrace(error)
+      @logger.error { "Moonfire::MessageBus: #{error.class}: #{error.message}" }
+      @logger.debug { error.backtrace.join("\n") }
     end
   end
 end

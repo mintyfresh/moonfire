@@ -5,9 +5,9 @@ module Moonfire
     # Errors raised by subscribers are silently ignored and discarded.
     IGNORE = :ignore
 
-    # Errors raised by subscribers are logged as warnings.
+    # Errors raised by subscribers are written to the error log (with stacktraces at debug level).
     # This is the default error mode.
-    WARN = :warn
+    LOG = :log
 
     # Errors bubble-up immediately, interrupting delivery to other subscribers.
     # The first error raised is the one that is raised to the caller.
@@ -19,7 +19,7 @@ module Moonfire
 
     # @return [Array<Symbol>]
     def self.all
-      @all ||= [IGNORE, WARN, RAISE_FIRST, RAISE_LAST].freeze
+      @all ||= [IGNORE, LOG, RAISE_FIRST, RAISE_LAST].freeze
     end
   end
 end
