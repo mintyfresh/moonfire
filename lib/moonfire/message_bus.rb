@@ -3,7 +3,17 @@
 module Moonfire
   class MessageBus
     def initialize
+      @error_interceptors = []
       @subscriptions = {}
+    end
+
+    # @param block [Proc]
+    # @yieldparam subscriber [Class<Moonfire::Subscriber>]
+    # @yieldparam message [Moonfire::Message]
+    # @yieldparam error [StandardError]
+    # @return [void]
+    def add_error_interceptor(&block)
+      @error_interceptors << block
     end
 
     # @param message_class [Class<Moonfire::Message>]
@@ -45,10 +55,23 @@ module Moonfire
         rescue StandardError => error
           # Defer any error handling to the message publisher
           yield(subscriber_class, message, error) if block_given?
+
+          # Pass the error to any error interceptors
+          notify_error_interceptors(subscriber_class, message, error)
         end
 
         # Check for subscriptions to the parent class
         message_class = message_class.superclass
+      end
+    end
+
+    # @param subscriber_class [Class<Moonfire::Subscriber>]
+    # @param message [Moonfire::Message]
+    # @param error [StandardError]
+    # @return [void]
+    def notify_error_interceptors(subscriber_class, message, error)
+      @error_interceptors.each do |interceptor|
+        interceptor.call(subscriber_class, message, error)
       end
     end
 
