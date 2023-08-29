@@ -11,6 +11,11 @@ module Moonfire
   autoload :Model, 'moonfire/model'
   autoload :Subscriber, 'moonfire/subscriber'
 
+  # @return [Logger]
+  def self.logger
+    Engine.config.moonfire.logger
+  end
+
   # @return [Moonfire::MessageBus]
   def self.message_bus
     Engine.config.moonfire.message_bus

@@ -2,7 +2,7 @@
 
 module Moonfire
   class SubscriberDeliveryJob < ApplicationJob
-    queue_as :subscribers
+    queue_as Moonfire::Engine.config.moonfire.job_queue_name
 
     rescue_from StandardError do |error|
       subscriber_class, message_class, message_attributes = arguments

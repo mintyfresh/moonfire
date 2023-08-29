@@ -5,13 +5,9 @@ module Moonfire
     # @return [Symbol]
     attr_reader :error_mode
 
-    # @return [Logger]
-    attr_accessor :logger
-
     def initialize
-      @error_mode         = ErrorMode::LOG
+      @error_mode         = Engine.config.moonfire.error_mode || ErrorMode::LOG
       @error_interceptors = []
-      @logger             = Rails.logger
       @subscriptions      = {}
     end
 
@@ -119,8 +115,8 @@ module Moonfire
     # @param error [StandardError]
     # @return [void]
     def log_error_and_backtrace(error)
-      @logger.error { "Moonfire::MessageBus: #{error.class}: #{error.message}" }
-      @logger.debug { error.backtrace.join("\n") }
+      Moonfire.logger.error { "Moonfire::MessageBus: #{error.class}: #{error.message}" }
+      Moonfire.logger.debug { error.backtrace.join("\n") }
     end
   end
 end
