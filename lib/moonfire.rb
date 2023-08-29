@@ -8,7 +8,6 @@ module Moonfire
   autoload :Message, 'moonfire/message'
   autoload :MessageBus, 'moonfire/message_bus'
   autoload :Model, 'moonfire/model'
-  autoload :Publisher, 'moonfire/publisher'
   autoload :Subscriber, 'moonfire/subscriber'
 
   # @return [Moonfire::MessageBus]
