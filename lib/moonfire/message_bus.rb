@@ -64,15 +64,13 @@ module Moonfire
     # @yieldparam message [Moonfire::Message]
     # @yieldparam error [StandardError]
     # @return [void]
-    def deliver(message)
+    def deliver(message, &)
       last_error = nil
       message_class = message.class
 
       while message_class < Moonfire::Message
         subscribers_for(message_class).each do |subscriber_class|
-          last_error = with_delivery_error_handling do
-            deliver_message_to_subscriber(subscriber_class, message)
-          end
+          last_error = deliver_message_to_subscriber(subscriber_class, message, &)
         end
 
         # Check for subscriptions to the parent class
@@ -97,13 +95,12 @@ module Moonfire
 
     # @param subscriber_class [Class<Moonfire::Subscriber>]
     # @param message [Moonfire::Message]
+    # @yieldparam subscriber [Class<Moonfire::Subscriber>]
+    # @yieldparam message [Moonfire::Message]
+    # @yieldparam error [StandardError]
     # @return [void]
     def deliver_message_to_subscriber(subscriber_class, message)
       subscriber_class.deliver(message)
-    end
-
-    def with_delivery_error_handling
-      yield
     rescue StandardError => error
       # Defer any error handling to the message publisher
       yield(subscriber_class, message, error) if block_given?
