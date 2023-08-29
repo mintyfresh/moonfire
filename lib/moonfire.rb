@@ -5,6 +5,7 @@ require 'moonfire/engine'
 
 module Moonfire
   autoload :DeliveryMethod, 'moonfire/delivery_method'
+  autoload :ErrorMode, 'moonfire/error_mode'
   autoload :Message, 'moonfire/message'
   autoload :MessageBus, 'moonfire/message_bus'
   autoload :Model, 'moonfire/model'

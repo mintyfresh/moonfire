@@ -2,9 +2,27 @@
 
 module Moonfire
   class MessageBus
+    # @return [Symbol]
+    attr_reader :error_mode
+
+    # @return [Logger]
+    attr_accessor :logger
+
     def initialize
+      @error_mode         = ErrorMode::WARN
       @error_interceptors = []
-      @subscriptions = {}
+      @logger             = Rails.logger
+      @subscriptions      = {}
+    end
+
+    # @param value [Symbol]
+    # @return [void]
+    def error_mode=(value)
+      unless ErrorMode.all.include?(value)
+        raise ArgumentError, "invalid error mode: #{value.inspect} (expected one of #{ErrorMode.all.inspect})"
+      end
+
+      @error_mode = value
     end
 
     # @param block [Proc]
@@ -47,22 +65,22 @@ module Moonfire
     # @yieldparam error [StandardError]
     # @return [void]
     def deliver(message)
+      last_error = nil
       message_class = message.class
 
       while message_class < Moonfire::Message
         subscribers_for(message_class).each do |subscriber_class|
-          deliver_message_to_subscriber(subscriber_class, message)
-        rescue StandardError => error
-          # Defer any error handling to the message publisher
-          yield(subscriber_class, message, error) if block_given?
-
-          # Pass the error to any error interceptors
-          notify_error_interceptors(subscriber_class, message, error)
+          last_error = with_delivery_error_handling do
+            deliver_message_to_subscriber(subscriber_class, message)
+          end
         end
 
         # Check for subscriptions to the parent class
         message_class = message_class.superclass
       end
+
+      # Raise the last error if configured to do so
+      raise last_error if last_error && error_mode == ErrorMode::RAISE_LAST
     end
 
     # @param subscriber_class [Class<Moonfire::Subscriber>]
@@ -82,6 +100,23 @@ module Moonfire
     # @return [void]
     def deliver_message_to_subscriber(subscriber_class, message)
       subscriber_class.deliver(message)
+    end
+
+    def with_delivery_error_handling
+      yield
+    rescue StandardError => error
+      # Defer any error handling to the message publisher
+      yield(subscriber_class, message, error) if block_given?
+
+      # Pass the error to any error interceptors
+      notify_error_interceptors(subscriber_class, message, error)
+
+      # Take an action based on the configured error mode
+      case error_mode
+      when ErrorMode::WARN        then @logger.warn { "Moonfire::MessageBus: #{error.class}: #{error.message}" }
+      when ErrorMode::RAISE_FIRST then raise error
+      when ErrorMode::RAISE_LAST  then error # return the error, defer raising until the end
+      end
     end
   end
 end
