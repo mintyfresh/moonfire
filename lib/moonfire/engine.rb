@@ -15,7 +15,6 @@ module Moonfire
 
     config.moonfire.error_mode       = nil
     config.moonfire.job_queue_name   = :subscribers
-    config.moonfire.logger           = Rails.logger
     config.moonfire.subscriber_paths = []
 
     initializer 'moonfire.message_bus' do
