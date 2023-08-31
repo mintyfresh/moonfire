@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LogUserEventsLaterSubscriber < Moonfire::Subscriber
-  subscribes_to User::Create, User::Update, User::Destroy
+  subscribes_to User::CreateMessage, User::UpdateMessage, User::DestroyMessage
 
   self.delivery_method = :active_job, { wait: 10.seconds }
 

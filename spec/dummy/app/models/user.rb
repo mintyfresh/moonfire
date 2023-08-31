@@ -14,4 +14,6 @@ class User < ApplicationRecord
   include Moonfire::Model
 
   validates :name, :email, presence: true
+
+  publishes_messages_on :create, :update, :destroy
 end

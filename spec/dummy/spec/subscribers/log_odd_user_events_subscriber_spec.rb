@@ -6,32 +6,32 @@ RSpec.describe LogOddUserEventsSubscriber, type: :subscriber do
   subject(:subscriber) { described_class.new(message) }
 
   it 'accepts user create messages' do
-    message = User::Create.new(user: build(:user, id: 1))
+    message = User::CreateMessage.new(user: build(:user, id: 1))
     expect(described_class).to accept(message)
   end
 
   it 'does not accept user create messages for even user IDs' do
-    message = User::Create.new(user: build(:user, id: 2))
+    message = User::CreateMessage.new(user: build(:user, id: 2))
     expect(described_class).not_to accept(message)
   end
 
   it 'accepts user update messages' do
-    message = User::Update.new(user: build(:user, id: 1))
+    message = User::UpdateMessage.new(user: build(:user, id: 1))
     expect(described_class).to accept(message)
   end
 
   it 'does not accept user update messages for even user IDs' do
-    message = User::Update.new(user: build(:user, id: 2))
+    message = User::UpdateMessage.new(user: build(:user, id: 2))
     expect(described_class).not_to accept(message)
   end
 
   it 'accepts user destroy messages' do
-    message = User::Destroy.new(user: build(:user, id: 1))
+    message = User::DestroyMessage.new(user: build(:user, id: 1))
     expect(described_class).to accept(message)
   end
 
   it 'does not accept user destroy messages for even user IDs' do
-    message = User::Destroy.new(user: build(:user, id: 2))
+    message = User::DestroyMessage.new(user: build(:user, id: 2))
     expect(described_class).not_to accept(message)
   end
 
@@ -44,45 +44,45 @@ RSpec.describe LogOddUserEventsSubscriber, type: :subscriber do
 
     it 'is called when a user is created' do
       user = create(:user)
-      expect(User::Create).to have_been_delivered_to(described_class).with(user:)
+      expect(User::CreateMessage).to have_been_delivered_to(described_class).with(user:)
     end
 
     it 'is called when a user is updated' do
       user = create(:user)
       user.update!(name: 'New Name')
-      expect(User::Update).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
+      expect(User::UpdateMessage).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
     end
 
     it 'is called when a user is destroyed' do
       user = create(:user)
       user.destroy!
-      expect(User::Destroy).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
+      expect(User::DestroyMessage).to have_been_delivered_to(described_class).with(hash_including(:changes, user:))
     end
 
     context 'with a user create message' do
-      let(:message) { User::Create.new(user: build(:user, id: 1)) }
+      let(:message) { User::CreateMessage.new(user: build(:user, id: 1)) }
 
       it 'logs the message' do
         perform
-        expect(Rails.logger).to have_received(:info).with('Odd User 1 => Create')
+        expect(Rails.logger).to have_received(:info).with('Odd User 1 => CreateMessage')
       end
     end
 
     context 'with a user update message' do
-      let(:message) { User::Update.new(user: build(:user, id: 1)) }
+      let(:message) { User::UpdateMessage.new(user: build(:user, id: 1)) }
 
       it 'logs the message' do
         perform
-        expect(Rails.logger).to have_received(:info).with('Odd User 1 => Update')
+        expect(Rails.logger).to have_received(:info).with('Odd User 1 => UpdateMessage')
       end
     end
 
     context 'with a user destroy message' do
-      let(:message) { User::Destroy.new(user: build(:user, id: 1)) }
+      let(:message) { User::DestroyMessage.new(user: build(:user, id: 1)) }
 
       it 'logs the message' do
         perform
-        expect(Rails.logger).to have_received(:info).with('Odd User 1 => Destroy')
+        expect(Rails.logger).to have_received(:info).with('Odd User 1 => DestroyMessage')
       end
     end
   end
