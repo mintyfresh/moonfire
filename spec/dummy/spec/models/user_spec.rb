@@ -30,18 +30,18 @@ RSpec.describe User do
   end
 
   it 'publishes a create message when created' do
-    expect { user.save! }.to have_published(User::CreateMessage).with(user:)
+    expect { user.save! }.to have_published(described_class, :create).with(user:)
   end
 
   it 'publishes an update message when updated' do
     user.save!
-    expect { user.update!(name: 'New Name') }.to have_published(User::UpdateMessage)
+    expect { user.update!(name: 'New Name') }.to have_published(described_class, :update)
       .with(hash_including(:changes, user:))
   end
 
   it 'publishes a destroy message when destroyed' do
     user.save!
-    expect { user.destroy! }.to have_published(User::DestroyMessage)
+    expect { user.destroy! }.to have_published(described_class, :destroy)
       .with(hash_including(:changes, user:))
   end
 

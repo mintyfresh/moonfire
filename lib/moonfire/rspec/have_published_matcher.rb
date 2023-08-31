@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-RSpec::Matchers.define :have_published do |expected_class|
+RSpec::Matchers.define :have_published do |expected_class, event_name = nil|
   match do |block|
+    expected_class = expected_class.lookup_message_class_for_event(event_name) if event_name.present?
+
     initial_count = message_bus.messages.count
     block.call
 
