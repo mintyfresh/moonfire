@@ -13,13 +13,13 @@ module Moonfire
 
   # @return [Logger]
   def self.logger
-    @logger ||= Rails.logger || ActiveSupport::Logger.new($stdout)
+    Engine.config.moonfire.logger ||= Rails.logger || ActiveSupport::Logger.new($stdout)
   end
 
   # @param logger [Logger]
   # @return [void]
   def self.logger=(logger)
-    @logger = logger
+    Engine.config.moonfire.logger = logger
   end
 
   # @return [Moonfire::MessageBus]
