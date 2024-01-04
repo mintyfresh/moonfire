@@ -60,13 +60,13 @@ module Moonfire
     # @yieldparam message [Moonfire::Message]
     # @yieldparam error [StandardError]
     # @return [void]
-    def deliver(message, &)
+    def deliver(message, &block) # rubocop:disable Naming/BlockForwarding
       last_error = nil
       message_class = message.class
 
       while message_class < Moonfire::Message
         subscribers_for(message_class).each do |subscriber_class|
-          last_error = deliver_message_to_subscriber(subscriber_class, message, &)
+          last_error = deliver_message_to_subscriber(subscriber_class, message, &block) # rubocop:disable Naming/BlockForwarding
         end
 
         # Check for subscriptions to the parent class
