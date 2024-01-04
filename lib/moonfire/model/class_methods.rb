@@ -97,12 +97,12 @@ module Moonfire
 
       # @param events [Array<Symbol>]
       # @return [void]
-      def publishes_messages_on(*events, **)
+      def publishes_messages_on(*events, **options) # rubocop:disable Style/ArgumentsForwarding
         events.each do |event|
           BUILT_IN_EVENTS.include?(event) or
             raise ArgumentError, "invalid event: #{event.inspect} (expected one of #{BUILT_IN_EVENTS.inspect})"
 
-          send(:"publishes_message_on_#{event}", **)
+          send(:"publishes_message_on_#{event}", **options) # rubocop:disable Style/ArgumentsForwarding
         end
       end
     end
