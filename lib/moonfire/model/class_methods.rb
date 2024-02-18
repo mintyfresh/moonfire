@@ -12,7 +12,7 @@ module Moonfire
 
       # @return [Hash{Symbol => String}]
       def moonfire_messages
-        @moonfire_messages ||= Hash.new { |hash, key| hash[key] = "#{key}Message".camelize }
+        @moonfire_messages ||= Hash.new { |hash, key| hash[key] = "#{key.to_s.camelize}Message" }
       end
 
       # Declares or extends a message class to be published by the current model.
