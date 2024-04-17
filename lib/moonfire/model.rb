@@ -19,8 +19,10 @@ module Moonfire
     # @yieldreturn [void]
     # @return [void]
     def publish_message(event_name, message_bus: default_message_bus, **, &)
+      attribute = self.class.base_class.model_name.singular.to_sym
+
       self.class.lookup_message_class_for_event(event_name)
-        .publish(model_name.singular.to_sym => self, **, message_bus:, &)
+        .publish(attribute => self, **, message_bus:, &)
     end
 
     # @return [Moonfire::MessageBus]

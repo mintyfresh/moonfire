@@ -26,7 +26,7 @@ module Moonfire
           message_class = const_get(class_name)
         else
           message_class = const_set(class_name, Class.new(Moonfire::Message))
-          message_class.attribute(model_name.singular.to_sym)
+          message_class.attribute(base_class.model_name.singular.to_sym)
         end
 
         attribute_names.each do |attribute_name|
